@@ -18,6 +18,9 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import sortBy from 'sort-by'
 
+let flipOrder = ''
+let sortType = 'mexican'
+
 const DATA = {
   title: 'Menu',
   items: [
@@ -30,9 +33,40 @@ const DATA = {
   ]
 }
 
-const element = (
-  // put your code here!
-  <div>Make it happen</div>
-)
+const changed = e => {
+  console.log('select changed')
+  sortType = e.target.value;
+  updateThePage();
+}
 
-ReactDOM.render(element, document.getElementById('root'))
+const clicked = e => {
+  console.log('clicked')
+  flipOrder = (flipOrder === '') ? '-' : '';
+  updateThePage();
+}
+
+const updateThePage = () => {
+  const element = (
+    // put your code here!
+    <div className="container">
+      <h2>{DATA.title}</h2>
+      <button onClick={clicked}>Flip Sort</button>
+      <select onChange={changed}>
+        <option value="mexican">Mexican</option>
+        <option value="english">English</option>
+      </select>
+      <ul>
+        {DATA.items
+          .filter(item => item.type === sortType)
+          .sort(sortBy(flipOrder + 'name'))
+          .map(item => {
+            return <li>{item.name}</li>
+          })}
+      </ul>
+    </div>
+  )
+
+  ReactDOM.render(element, document.getElementById('root'))
+}
+
+updateThePage();
