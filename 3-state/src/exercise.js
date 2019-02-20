@@ -23,16 +23,45 @@ let styles = {}
 let countries = [
   { id: 1, name: 'USA', description: 'Land of the Free, Home of the brave' },
   { id: 2, name: 'Brazil', description: 'Sunshine, beaches, and Carnival' },
-  { id: 3, name: 'Russia', description: 'World Cup 2018!' }
+  { id: 3, name: 'Russia', description: 'World Cup 2018!' },
+  {id: 4, name: 'Germany', description: 'Historical Home'}
 ]
 
+const CountryPanel = ({country}) => {
+  return (
+    <div>
+    <h3>
+      {country.name}
+    </h3>
+    <p>
+      {country.description}
+    </p>
+    </div>
+  )
+}
+
 class Tabs extends React.Component {
+
+  selectedTab = 1;
+
+  changeTab(tabNumber)  {
+    // console.log('tab clicked', tabNumber);
+    this.selectedTab = tabNumber;
+    this.setState(() => ({})); // force re-render - Kent C Dodds 
+  }
+
+
   render() {
     return (
       <div>
-        <button style={styles.activeTab}>Active Tab</button>
-        <button style={styles.tab}>Inactive tab</button>
-        <div style={styles.panel}>Panel</div>
+        {countries.map(country => {
+          return (<button onClick={(e)=> this.changeTab(country.id)} key={country.id} style={this.selectedTab === country.id ? styles.activeTab : styles.tab}>{country.name}</button>)
+        })}
+        <div style={styles.panel}>
+          {countries.filter(country => country.id === this.selectedTab).map(country => {
+            return (<CountryPanel key={country.id} country={country}></CountryPanel>)
+          })}
+        </div>
       </div>
     )
   }
