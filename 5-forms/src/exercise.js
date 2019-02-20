@@ -20,20 +20,57 @@ import ReactDOM from 'react-dom'
 import serializeForm from 'form-serialize'
 
 function CheckoutForm() {
+  const [billing, setBilling] = useState({
+    billingName: '',
+    billingState: ''
+  })
+
+  const [shipping, setShipping] = useState({
+    name: '',
+    state: ''
+  })
+
+  const [checked, setChecked] = useState(false)
+
+  const submitForm = e => {
+    // console.log(`Submit: Billing Name: ${billing.billingName}  State:${billing.billingState}`)
+    // if (!checked) {
+    //   console.log(`Shipping Name ${shipping.name} State: ${shipping.state}`)
+    // }
+    const values = serializeForm(e.target, { hash: true })
+    console.log('values', values)
+    e.preventDefault()
+  }
+
   return (
     <div>
       <h1>Checkout</h1>
-      <form>
+      <form onSubmit={submitForm}>
         <fieldset>
           <legend>Billing Address</legend>
           <p>
             <label>
-              Billing Name: <input type="text" />
+              Billing Name:{' '}
+              <input
+                type="text"
+                name="billingName"
+                onChange={e => {
+                  setBilling({ ...billing, billingName: e.target.value })
+                }}
+              />
             </label>
           </p>
           <p>
             <label>
-              Billing State: <input type="text" size="2" />
+              Billing State:{' '}
+              <input
+                type="text"
+                size="2"
+                name="billingState"
+                onChange={e => {
+                  setBilling({ ...billing, billingState: e.target.value })
+                }}
+              />
             </label>
           </p>
         </fieldset>
@@ -42,17 +79,42 @@ function CheckoutForm() {
 
         <fieldset>
           <label>
-            <input type="checkbox" /> Same as billing
+            <input
+              type="checkbox"
+              onClick={e => {
+                setChecked(e.target.checked)
+              }}
+            />{' '}
+            Same as billing
           </label>
           <legend>Shipping Address</legend>
           <p>
             <label>
-              Shipping Name: <input type="text" />
+              Shipping Name:{' '}
+              <input
+                name="shippingName"
+                disabled={checked}
+                type="text"
+                value={checked ? billing.billingName : shipping.name}
+                onChange={e => {
+                  setShipping({ ...shipping, name: e.target.value })
+                }}
+              />
             </label>
           </p>
           <p>
             <label>
-              Shipping State: <input type="text" size="2" />
+              Shipping State:{' '}
+              <input
+                name="shippingState"
+                type="text"
+                size="2"
+                disabled={checked}
+                value={checked ? billing.billingState : shipping.state}
+                onChange={e => {
+                  setShipping({ ...shipping, state: e.target.value })
+                }}
+              />
             </label>
           </p>
         </fieldset>
