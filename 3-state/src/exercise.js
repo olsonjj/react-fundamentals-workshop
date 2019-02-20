@@ -15,7 +15,7 @@
 // 6. Render the second set of tabs INSIDE THE PANEL OF THE
 //    FIRST TABS!
 ////////////////////////////////////////////////////////////////////////////////
-import React from 'react'
+import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 
 let styles = {}
@@ -24,44 +24,66 @@ let countries = [
   { id: 1, name: 'USA', description: 'Land of the Free, Home of the brave' },
   { id: 2, name: 'Brazil', description: 'Sunshine, beaches, and Carnival' },
   { id: 3, name: 'Russia', description: 'World Cup 2018!' },
-  {id: 4, name: 'Germany', description: 'Historical Home'}
+  { id: 4, name: 'Germany', description: 'Historical Home' }
 ]
 
-const CountryPanel = ({country}) => {
+const CountryPanel = ({ country }) => {
   return (
     <div>
-    <h3>
-      {country.name}
-    </h3>
-    <p>
-      {country.description}
-    </p>
+      <h3>{country.name}</h3>
+      <p>{country.description}</p>
     </div>
   )
 }
 
+const Sample = () => {
+  const [count, setCount] = useState(0)
+  return (
+    <button
+      onClick={() => {
+        setCount(count + 1)
+      }}
+    >
+      Name {count}
+    </button>
+  )
+}
+
 class Tabs extends React.Component {
-
-  selectedTab = 1;
-
-  changeTab(tabNumber)  {
-    // console.log('tab clicked', tabNumber);
-    this.selectedTab = tabNumber;
-    this.setState(() => ({})); // force re-render - Kent C Dodds 
+  constructor(props) {
+    super(props)
+    this.state = {
+      selectedTab: 1
+    }
   }
 
+  changeTab(tabNumber) {
+    console.log('tab clicked', this.state.selectedTab)
+    this.setState({ selectedTab: tabNumber })
+  }
 
   render() {
     return (
       <div>
         {countries.map(country => {
-          return (<button onClick={(e)=> this.changeTab(country.id)} key={country.id} style={this.selectedTab === country.id ? styles.activeTab : styles.tab}>{country.name}</button>)
+          return (
+            <button
+              onClick={e => this.changeTab(country.id)}
+              key={country.id}
+              style={this.state.selectedTab === country.id ? styles.activeTab : styles.tab}
+            >
+              {country.name}
+            </button>
+          )
         })}
         <div style={styles.panel}>
-          {countries.filter(country => country.id === this.selectedTab).map(country => {
-            return (<CountryPanel key={country.id} country={country}></CountryPanel>)
-          })}
+          {countries
+            .filter(country => country.id === this.state.selectedTab)
+            .map(country => {
+              return <CountryPanel key={country.id} country={country} />
+            })}
         </div>
+        <Sample c={4} />
       </div>
     )
   }
