@@ -22,10 +22,12 @@ const FLAGS = {
 }
 
 function App() {
+  const [activeIndex, setActiveIndex] = useState(0)
+
   return (
     <div>
-      <Tabs data={countries} />
-      <Flag country="usa" />
+      <Tabs data={countries} setActiveIndex={setActiveIndex} activeIndex={activeIndex} />
+      <Flag country={countries[activeIndex].id} />
     </div>
   )
 }
@@ -41,8 +43,7 @@ function Flag({ country }) {
   )
 }
 
-function Tabs({ data }) {
-  const [activeIndex, setActiveIndex] = useState(0)
+function Tabs({ data, setActiveIndex, activeIndex }) {
   return (
     <div>
       {data.map((tab, index) => {
